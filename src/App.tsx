@@ -1,13 +1,15 @@
+import { BrowserRouter } from 'react-router-dom'
 import './App.css'
-import { Button } from './components/ui/Button'
+import NavBar from './components/global/NavBar'
 
 function App() {
 
   return (
     <>
       <div>
-        <h2 className='text-lg'>Heading</h2>
-        <Button variant="outline">Login</Button>
+        <BrowserRouter>
+          <NavBar />
+        </BrowserRouter>
       </div>
     </>
   )

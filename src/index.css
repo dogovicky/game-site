@@ -24,13 +24,6 @@
 
     --color-border: hsl(220 20% 18%);
     --color-input: hsl(220 20% 18%);
-
-    /* Gradients */
-    --color-gradient-primary: linear-gradient(135deg, hsl(217 91% 60%), hsl(259 65% 65%));
-    --color-gradient-hero: linear-gradient(180deg, hsl(220 30% 8%), hsl(259 40% 15%));
-    --color-glow-blue: 0 0 40px hsl(217 91% 60% / 0.3);
-    --color-glow-purple: 0 0 40px hsl(259 65% 65% / 0.3);
-    --color-shadow-card: 0 8px 32px hsl(217 91% 60% / 0.15);
 }
 
 @layer base {
@@ -76,14 +69,56 @@
         --shadow-card: 0 8px 32px hsl(217 91% 60% / 0.15);
         --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
+    .light {
+        --background: 0 0% 100%;
+        --foreground: 220 20% 20%;
+
+        --card: 0 0% 100%;
+        --card-foreground: 220 20% 20%;
+
+        --popover: 0 0% 100%;
+        --popover-foreground: 220 20% 20%;
+
+        --primary: 217 91% 60%;
+        --primary-foreground: 0 0% 100%;
+
+        --secondary: 259 65% 65%;
+        --secondary-foreground: 0 0% 100%;
+
+        --muted: 220 20% 90%;
+        --muted-foreground: 220 20% 40%;
+
+        --accent: 259 65% 65%;
+        --accent-foreground: 0 0% 100%;
+
+        --destructive: 0 84% 60%;
+        --destructive-foreground: 0 0% 100%;
+
+        --border: 220 20% 85%;
+        --input: 220 20% 85%;
+        --ring: 217 91% 60%;
+
+        --gradient-hero: linear-gradient(180deg, hsl(0 0% 100%), hsl(220 20% 95%));
+    }
 }
 
 @layer base {
     * {
         @apply border-border;
+        @apply m-0 p-0;
     }
 
     body {
         @apply bg-background text-foreground;
+    }
+}
+
+@layer utilities {
+    .bg-gradient-primary {
+        background-image: var(--gradient-primary);
+    }
+
+    .bg-gradient-hero {
+        background-image: var(--gradient-hero);
     }
 }
