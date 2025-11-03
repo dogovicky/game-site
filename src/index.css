@@ -128,4 +128,15 @@
     .bg-gradient-hero {
         background-image: var(--gradient-hero);
     }
+    .scrollbar-hide {
+        /* Firefox */
+        scrollbar-width: none;
+    }
+    
+    .scrollbar-hide::-webkit-scrollbar {
+        /* Webkit (Chrome, Safari, Edge) */
+        display: none;
+        width: 0px;
+        background: transparent;
+    }
 }
