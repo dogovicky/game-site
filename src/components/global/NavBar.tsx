@@ -36,8 +36,8 @@ const NavBar = () => {
                <Button asChild variant="outline" className='bg-accent'>
                 <Link to='/signup'>Sign Up</Link>
               </Button>
-              <Button asChild onClick={toggleTheme} className='p-2 rounded'>
-                { theme == "dark" ? <Sun /> : <Moon />}
+              <Button asChild onClick={toggleTheme} className='p-2 rounded border-0 bg-transparent text-gray hover:bg-transparent cursor-pointer'>
+                { theme == "dark" ? <Sun size="30" /> : <Moon size="30"/>}
               </Button>
             </div>
             
