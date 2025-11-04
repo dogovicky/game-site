@@ -2,55 +2,112 @@ import { useState } from 'react';
 import { 
     CalendarCheck, Award, Gamepad2, Monitor, Trophy, Rocket, Clock, Star, Users, ArrowBigUp, Puzzle, Zap, Smartphone
 } from 'lucide-react';
-import { Link } from 'react-router-dom'; 
+import { FaWindows, FaPlaystation, FaXbox, FaApple, FaLinux, FaAndroid } from "react-icons/fa";
+import { SiNintendoswitch } from "react-icons/si";
+import { MdPhoneIphone } from "react-icons/md";
+
 
 const iconMap = {
-    // New Releases
     "Last 30 Days": Rocket,
     "This week": CalendarCheck,
     "Next Week": Clock,
-
-    // Top
     "Best of the year": Trophy,
     "Popular in 2025": Star,
     "All Time top 250": Award,
-
-    // Platforms
-    "Windows": Monitor,
-    "Playstation 4": Gamepad2,
-    "XBox One": Gamepad2, // Same icon for consistency
-    "Nintendo Switch": Gamepad2,
-    "iOS": Smartphone,
-    "Android": Smartphone,
-
-    // Genres
+    "Windows": FaWindows,
+    "Playstation 4": FaPlaystation,
+    "XBox One": FaXbox,
+    "Nintendo Switch": SiNintendoswitch,
+    "iOS": MdPhoneIphone,
+    "Linux": FaLinux,
+    "Android": FaAndroid,
     "Action": Zap,
     "Racing": ArrowBigUp, 
-    "Shooter": Users, // Users for competitive/multiplayer feel
-    "Sporst": Trophy,
+    "Shooter": Users,
+    "Sports": Trophy,
     "Puzzle": Puzzle,
     "Adventure": Rocket
-};
+} as const;
 
-const SideNav = () => {
+type SideNavProps = {
+    setGenre: (option: { label: string; value: string } | null) => void;
+    setPlatform: (option: { label: string; value: string } | null) => void;
+    setDateFilter: (date: string) => void;
+    setOrdering: (ordering: string) => void;
+}
+
+const SideNav = ({ setGenre, setPlatform, setDateFilter, setOrdering }: SideNavProps) => {
     const [activeLink, setActiveLink] = useState(""); 
 
     const sideNavLinks = [
-        { header: "New Releases", links: 
-            [ { name: "Last 30 Days", href: "/filter/30days"}, { name: "This week", href: "/filter/week"}, { name: "Next Week", href: "/filter/nextweek"} ] },
-        { header: "Top", links: 
-            [ { name: "Best of the year", href: "/top/year"}, { name: "Popular in 2025", href: "/top/2025"}, { name: "All Time top 250", href: "/top/alltime"} ]},
-        { header: "Platforms", links: 
-            [ { name: "Windows", href: "/platform/windows"}, { name: "Playstation 4", href: "/platform/ps4"}, { name: "XBox One", href: "/platform/xboxone"}, 
-                { name: "Nintendo Switch", href: "/platform/switch"}, { name: "iOS", href: "/platform/ios"}, { name: "Android", href: "/platform/android"} ]},
-        { header: "Genres", links: 
-            [ { name: "Action", href: "/genre/action"}, { name: "Racing", href: "/genre/racing"}, { name: "Shooter", href: "/genre/shooter"}, 
-                { name: "Sports", href: "/genre/sports"}, { name: "Puzzle", href: "/genre/puzzle"}, { name: "Adventure", href: "/genre/adventure"}]}
+        { 
+            header: "New Releases", 
+            type: "date" as const,
+            links: [ 
+                { name: "Last 30 Days", value: getLastThirtyDays() }, 
+                { name: "This week", value: getThisWeek() }, 
+                { name: "Next Week", value: getNextWeek() } 
+            ] 
+        },
+        { 
+            header: "Top", 
+            type: "ordering" as const,
+            links: [ 
+                { name: "Best of the year", value: "-rating" }, 
+                { name: "Popular in 2025", value: "-released" }, 
+                { name: "All Time top 250", value: "-metacritic" } 
+            ]
+        },
+        { 
+            header: "Platforms", 
+            type: "platform" as const,
+            links: [ 
+                { name: "Windows", value: "4" }, 
+                { name: "Playstation 4", value: "18" }, 
+                { name: "XBox One", value: "1" }, 
+                { name: "Nintendo Switch", value: "7" }, 
+                { name: "iOS", value: "3" }, 
+                { name: "Android", value: "21" } 
+            ]
+        },
+        { 
+            header: "Genres", 
+            type: "genre" as const,
+            links: [ 
+                { name: "Action", value: "action" }, 
+                { name: "Racing", value: "racing" }, 
+                { name: "Shooter", value: "shooter" }, 
+                { name: "Sports", value: "sports" }, 
+                { name: "Puzzle", value: "puzzle" }, 
+                { name: "Adventure", value: "adventure" }
+            ]
+        }
     ];
 
-    const handleLinkClick = (name: string, href: string) => {
+    const handleLinkClick = (name: string, value: string, type: string) => {
         setActiveLink(name);
-        console.log(`Filtering by: ${name} (${href})`);
+        
+        // Clear other filters when clicking a new one
+        setGenre(null);
+        setPlatform(null);
+        setDateFilter("");
+        setOrdering("");
+
+        // Apply the selected filter
+        switch(type) {
+            case 'genre':
+                setGenre({ label: name, value });
+                break;
+            case 'platform':
+                setPlatform({ label: name, value });
+                break;
+            case 'date':
+                setDateFilter(value);
+                break;
+            case 'ordering':
+                setOrdering(value);
+                break;
+        }
     };
 
     return (
@@ -65,15 +122,15 @@ const SideNav = () => {
 
                         <ul className="space-y-1">
                             {section.links.map((link, linkIndex) => {
-                                const IconComponent = iconMap[link.name] || Gamepad2; // Default to Gamepad2
+                                const IconComponent = iconMap[link.name] || Gamepad2;
                                 const isActive = activeLink === link.name;
 
                                 return (
                                     <li key={linkIndex}>
-                                        
-                                        <Link to={link.href} onClick={(e) => {e.preventDefault(); handleLinkClick(link.name, link.href);}}
+                                        <button 
+                                            onClick={() => handleLinkClick(link.name, link.value, section.type)}
                                             className={`
-                                                flex items-center space-x-3 p-3 rounded-lg transition-all duration-200 
+                                                w-full flex items-center space-x-3 p-3 rounded-lg transition-all duration-200 
                                                 ${isActive 
                                                     ? 'bg-primary/20 text-primary font-medium shadow-inner' 
                                                     : 'text-foreground/80 hover:bg-muted hover:text-foreground'
@@ -81,7 +138,7 @@ const SideNav = () => {
                                             `}>
                                             <IconComponent size={20} className={isActive ? 'text-primary' : 'text-muted-foreground/80'} />
                                             <span className="text-sm">{link.name}</span>
-                                        </Link>
+                                        </button>
                                     </li>
                                 );
                             })}
@@ -90,10 +147,32 @@ const SideNav = () => {
                 ))}
             </div>
             
-            {/* Optional: Padding for the bottom for scrollability */}
             <div className="h-10"></div>
         </nav>
     );
 };
+
+// Helper functions to generate date ranges
+function getLastThirtyDays(): string {
+    const now = new Date();
+    const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+    return `${formatDate(thirtyDaysAgo)},${formatDate(now)}`;
+}
+
+function getThisWeek(): string {
+    const now = new Date();
+    const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    return `${formatDate(weekAgo)},${formatDate(now)}`;
+}
+
+function getNextWeek(): string {
+    const now = new Date();
+    const nextWeek = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+    return `${formatDate(now)},${formatDate(nextWeek)}`;
+}
+
+function formatDate(date: Date): string {
+    return date.toISOString().split('T')[0];
+}
 
 export default SideNav;

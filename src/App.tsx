@@ -1,7 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './App.css'
-import NavBar from './components/global/NavBar'
-import SideNav from './components/global/SideNav'
 import Index from './pages/Index'
 
 function App() {
@@ -10,8 +8,6 @@ function App() {
     <>
       <div>
         <BrowserRouter>
-          <NavBar />
-          {/* <SideNav /> */}
           <Routes>
             <Route path='/' element={<Index />} />
           </Routes>

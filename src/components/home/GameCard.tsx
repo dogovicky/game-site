@@ -1,47 +1,40 @@
 import { Card, CardHeader, CardContent, CardTitle } from "../ui/Card";
 import type { Game } from "../../types/Game";
-import { Star, Calendar, Monitor, Gamepad2, Smartphone } from "lucide-react";
-import { FaWindows, FaApple, FaLinux, FaPlaystation, FaXbox } from "react-icons/fa";
+import { Star, Calendar } from "lucide-react";
+import { FaWindows, FaPlaystation, FaXbox, FaApple, FaLinux, FaAndroid } from "react-icons/fa";
 import { SiNintendoswitch } from "react-icons/si";
+import { MdPhoneIphone } from "react-icons/md";
 
 interface GameCardProps {
   game: Game;
 }
 
-const getPlatformIcon = (platform: string = "") => {
-  switch (platform.toLowerCase()) {
+const getPlatformIcon = (platformSlug: string) => {
+  switch (platformSlug) {
     case "pc":
-    case "windows":
-      return FaWindows;
-    case "mac":
-    case "apple":
-      return FaApple;
-    case "linux":
-      return FaLinux;
+      return { Icon: FaWindows, color: "text-blue-500" };
     case "playstation":
-      return FaPlaystation;
+      return { Icon: FaPlaystation, color: "text-blue-600" };
     case "xbox":
-      return FaXbox;
-    case "nintendo switch":
-    case "switch":
-      return SiNintendoswitch;
+      return { Icon: FaXbox, color: "text-green-500" };
+    case "nintendo":
+      return { Icon: SiNintendoswitch, color: "text-red-500" };
+    case "mac":
+      return { Icon: FaApple, color: "text-gray-400" };
+    case "linux":
+      return { Icon: FaLinux, color: "text-yellow-500" };
+    case "ios":
+      return { Icon: MdPhoneIphone, color: "text-gray-600" };
+    case "android":
+      return { Icon: FaAndroid, color: "text-green-600" };
     default:
-      return FaWindows; // or a generic icon
+      return { Icon: FaWindows, color: "text-gray-500" };
   }
 };
 
 const GameCard = ({ game }: GameCardProps) => {
-  // Icon mapping for platforms
-//   const getPlatformIcon = (platform: string) => {
-//     if (platform.includes("PC")) return Monitor;
-//     if (platform.includes("PlayStation")) return Gamepad2;
-//     if (platform.includes("Xbox")) return Gamepad2;
-//     if (platform.includes("iOS") || platform.includes("Android")) return Smartphone;
-//     return Gamepad2;
-//   };
-
   return (
-    <Card className="overflow-hidden bg-card rounded-xl shadow-md hover:shadow-lg transition-all duration-300">
+    <Card className="overflow-hidden relative bg-card rounded-xl shadow-md hover:shadow-lg transition-all duration-300">
       {/* Image Section */}
       <CardHeader className="p-0">
         <img
@@ -52,34 +45,52 @@ const GameCard = ({ game }: GameCardProps) => {
       </CardHeader>
 
       <CardContent className="p-4 space-y-3">
-        {/* {game.platforms && game.platforms.length > 0 && (
-            <div className="flex items-center gap-2 text-muted-foreground text-xs">
-                {game.platforms.map((platformObj, index) => {
-                    const PlatformIcon = getPlatformIcon(platformObj.platform.name || "Unknown");
-                    return <PlatformIcon key={index} size={16} />;
-                })}
-            </div>
-        )} */}
-
+        {/* Platform Icons */}
+        {game.parent_platforms && game.parent_platforms.length > 0 && (
+          <div className="flex items-center gap-2">
+            {game.parent_platforms.map((platformObj) => {
+              const { Icon, color } = getPlatformIcon(platformObj.platform.slug);
+              return (
+                <Icon 
+                  key={platformObj.platform.id} 
+                  size={13} 
+                  className={color}
+                  title={platformObj.platform.name}
+                />
+              );
+            })}
+          </div>
+        )}
 
         {/* Title */}
-        <CardTitle className="text-xl font-semibold line-clamp-1">
+        <CardTitle className="text-xl text-left relative left-0 font-semibold">
           {game.name}
         </CardTitle>
 
-        
         <div className="flex items-center justify-between text-sm text-muted-foreground">
           {/* Rating */}
           <div className="flex items-center gap-1">
-            <Star size={16} className="text-yellow-500" />
-            <span>{game.rating || "N/A"}</span>
+            <Star size={13} className="text-yellow-500" />
+            <span className="text-xs">{game.rating?.toFixed(1) || "N/A"}</span>
           </div>
 
+          {/* Release Date */}
           <div className="flex items-center gap-1">
-            <Calendar size={16} />
-            <span>{game.released || "Unknown"}</span>
+            <Calendar size={14} />
+            <span className="text-xs">{game.released || "TBA"}</span>
           </div>
         </div>
+
+        {/* Genres (Optional) */}
+        {game.genres && game.genres.length > 0 && (
+          <div className="flex flex-wrap gap-1">
+            {game.genres.slice(0, 2).map((genre) => (
+              <span key={genre.id} className="text-[0.65em] px-2 py-1 rounded-full bg-muted text-muted-foreground">
+                {genre.name}
+              </span>
+            ))}
+          </div>
+        )}
       </CardContent>
     </Card>
   );

@@ -10,6 +10,7 @@ export function useFetch<T>(url: string) {
         if(!url) return;
 
         setLoading(true);
+        
 
         fetch(url)
             .then((res) => {
