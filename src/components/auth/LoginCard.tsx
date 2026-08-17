@@ -4,7 +4,7 @@ import { z } from "zod";
 import { Input } from "../ui/Input";
 import { Button } from "../ui/Button";
 import { useAuth } from "../../hooks/useAuth";
-import { AuthCredentials } from "../../types/auth";
+import type { AuthCredentials } from "../../types/auth";
 import { motion } from "framer-motion";
 
 const schema = z.object({
