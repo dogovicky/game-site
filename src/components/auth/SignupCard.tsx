@@ -76,27 +76,27 @@ export const SignupCard = () => {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-foreground">Full name</label>
-          <Input placeholder="Alex Carter" {...register("name")} />
+          <label htmlFor="signup-name" className="mb-1.5 block text-sm font-medium text-foreground">Full name</label>
+          <Input id="signup-name" placeholder="Alex Carter" {...register("name")} />
           {errors.name && <p className="mt-1 text-xs text-red-500">{errors.name.message}</p>}
         </div>
 
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-foreground">Email</label>
-          <Input type="email" placeholder="you@example.com" {...register("email")} />
+          <label htmlFor="signup-email" className="mb-1.5 block text-sm font-medium text-foreground">Email</label>
+          <Input id="signup-email" type="email" placeholder="you@example.com" {...register("email")} />
           {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email.message}</p>}
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-foreground">Password</label>
-            <Input type="password" placeholder="••••••••" {...register("password")} />
+            <label htmlFor="signup-password" className="mb-1.5 block text-sm font-medium text-foreground">Password</label>
+            <Input id="signup-password" type="password" placeholder="••••••••" {...register("password")} />
             {errors.password && <p className="mt-1 text-xs text-red-500">{errors.password.message}</p>}
           </div>
 
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-foreground">Confirm password</label>
-            <Input type="password" placeholder="••••••••" {...register("confirmPassword")} />
+            <label htmlFor="signup-confirm-password" className="mb-1.5 block text-sm font-medium text-foreground">Confirm password</label>
+            <Input id="signup-confirm-password" type="password" placeholder="••••••••" {...register("confirmPassword")} />
             {errors.confirmPassword && (
               <p className="mt-1 text-xs text-red-500">{errors.confirmPassword.message}</p>
             )}

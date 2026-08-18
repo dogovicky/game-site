@@ -49,14 +49,14 @@ export const LoginCard = () => {
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-foreground">Email</label>
-          <Input type="email" placeholder="you@example.com" {...register("email", { required: true })} />
+          <label htmlFor="login-email" className="mb-1.5 block text-sm font-medium text-foreground">Email</label>
+          <Input id="login-email" type="email" placeholder="you@example.com" {...register("email", { required: true })} />
           {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email.message}</p>}
         </div>
 
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-foreground">Password</label>
-          <Input type="password" placeholder="••••••••" {...register("password", { required: true })} />
+          <label htmlFor="login-password" className="mb-1.5 block text-sm font-medium text-foreground">Password</label>
+          <Input id="login-password" type="password" placeholder="••••••••" {...register("password", { required: true })} />
           {errors.password && <p className="mt-1 text-xs text-red-500">{errors.password.message}</p>}
         </div>
 
