@@ -1,18 +1,11 @@
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { Link } from "react-router-dom";
 import { Input } from "../ui/Input";
 import { Button } from "../ui/Button";
 import { useAuth } from "../../hooks/useAuth";
 import type { AuthCredentials } from "../../types/auth";
 import { motion } from "framer-motion";
-
-const schema = z.object({
-  email: z.string().email({ message: "Invalid email address" }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters" }),
-});
-
-type FormData = z.infer<typeof schema>;
+import { loginSchema, type LoginFormValues } from "../../lib/authValidation";
 
 export const LoginCard = () => {
   const { login, error, loading } = useAuth();
@@ -21,13 +14,13 @@ export const LoginCard = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<LoginFormValues>({
     defaultValues: { email: "", password: "" },
     mode: "onBlur",
   });
 
-  const onSubmit = async (data: FormData) => {
-    const parsed = schema.safeParse(data);
+  const onSubmit = async (data: LoginFormValues) => {
+    const parsed = loginSchema.safeParse(data);
     if (!parsed.success) {
       return;
     }
@@ -49,14 +42,14 @@ export const LoginCard = () => {
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-foreground">Email</label>
-          <Input type="email" placeholder="you@example.com" {...register("email", { required: true })} />
+          <label htmlFor="login-email" className="mb-1.5 block text-sm font-medium text-foreground">Email</label>
+          <Input id="login-email" type="email" placeholder="you@example.com" {...register("email", { required: true })} />
           {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email.message}</p>}
         </div>
 
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-foreground">Password</label>
-          <Input type="password" placeholder="••••••••" {...register("password", { required: true })} />
+          <label htmlFor="login-password" className="mb-1.5 block text-sm font-medium text-foreground">Password</label>
+          <Input id="login-password" type="password" placeholder="••••••••" {...register("password", { required: true })} />
           {errors.password && <p className="mt-1 text-xs text-red-500">{errors.password.message}</p>}
         </div>
 
