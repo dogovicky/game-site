@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { Link } from "react-router-dom";
 import { Input } from "../ui/Input";
 import { Button } from "../ui/Button";
 import { useAuth } from "../../hooks/useAuth";
@@ -14,30 +15,24 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 export const LoginCard = () => {
-  const { login } = useAuth();
+  const { login, error, loading } = useAuth();
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<FormData>({
     defaultValues: { email: "", password: "" },
+    mode: "onBlur",
   });
 
   const onSubmit = async (data: FormData) => {
-    // validate once with zod for a second safety net
     const parsed = schema.safeParse(data);
     if (!parsed.success) {
-      // react-hook-form already shows errors, but short-circuit if zod fails
       return;
     }
 
-    try {
-      await login(data as AuthCredentials);
-      // Optionally: redirect is handled by the caller (page)
-    } catch (e) {
-      // login() already sets error in context; nothing else to do here
-    }
+    await login(data as AuthCredentials);
   };
 
   return (
@@ -45,36 +40,51 @@ export const LoginCard = () => {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35 }}
-      className="w-full max-w-md mx-auto bg-card/80 backdrop-blur rounded-xl p-6 shadow-lg border"
+      className="w-full max-w-md mx-auto bg-card/80 backdrop-blur rounded-2xl p-6 shadow-[0_18px_45px_rgba(15,23,42,0.25)] border border-border/70"
     >
-      <h2 className="text-2xl font-bold mb-2">Welcome back</h2>
-      <p className="text-sm text-muted-foreground mb-6">Log in to access your games and progress.</p>
+      <div className="mb-6">
+        <p className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">Welcome back</p>
+        <h2 className="mt-2 text-3xl font-bold text-foreground">Sign in</h2>
+      </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
-          <label className="text-sm mb-1 block">Email</label>
+          <label className="mb-1.5 block text-sm font-medium text-foreground">Email</label>
           <Input type="email" placeholder="you@example.com" {...register("email", { required: true })} />
-          {errors.email && <p className="text-xs text-red-500 mt-1">{errors.email.message}</p>}
+          {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email.message}</p>}
         </div>
 
         <div>
-          <label className="text-sm mb-1 block">Password</label>
+          <label className="mb-1.5 block text-sm font-medium text-foreground">Password</label>
           <Input type="password" placeholder="••••••••" {...register("password", { required: true })} />
-          {errors.password && <p className="text-xs text-red-500 mt-1">{errors.password.message}</p>}
+          {errors.password && <p className="mt-1 text-xs text-red-500">{errors.password.message}</p>}
         </div>
 
-        <div className="flex items-center justify-between">
-          <div className="text-sm">
-            <a href="#" className="text-primary underline">Forgot password?</a>
-          </div>
+        <div className="flex items-center justify-end">
+          <Link to="/forgot-password" className="text-sm font-medium text-primary underline-offset-4 hover:underline">
+            Forgot password?
+          </Link>
         </div>
+
+        {error && (
+          <div className="rounded-lg border border-red-500/20 bg-red-500/5 px-3 py-2 text-sm text-red-500">
+            {error}
+          </div>
+        )}
 
         <div>
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? "Signing in..." : "Sign in"}
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? "Signing in..." : "Sign in"}
           </Button>
         </div>
       </form>
+
+      <p className="mt-5 text-center text-sm text-muted-foreground">
+        New to Game Hub?{" "}
+        <Link to="/signup" className="font-medium text-primary underline-offset-4 hover:underline">
+          Create an account
+        </Link>
+      </p>
     </motion.div>
   );
 };

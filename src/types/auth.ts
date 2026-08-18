@@ -10,6 +10,10 @@ export interface SignupCredentials {
   confirmPassword: string;
 }
 
+export interface PasswordResetRequest {
+  email: string;
+}
+
 export interface User {
   id: string;
   name: string;

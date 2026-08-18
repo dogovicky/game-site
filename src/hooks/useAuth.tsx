@@ -12,8 +12,9 @@ export function useAuth() {
       error: ctx.error,
       login: ctx.login,
       signup: ctx.signup,
+      resetPassword: ctx.resetPassword,
       logout: ctx.logout,
     }),
-    [ctx.state, ctx.loading, ctx.error, ctx.login, ctx.signup, ctx.logout]
+    [ctx.state, ctx.loading, ctx.error, ctx.login, ctx.signup, ctx.resetPassword, ctx.logout]
   );
 }
