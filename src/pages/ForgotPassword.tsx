@@ -1,14 +1,10 @@
 import { useState } from "react";
 import { ArrowLeft, CheckCircle2, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
-import { z } from "zod";
 import { useAuth } from "../hooks/useAuth";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
-
-const resetSchema = z.object({
-  email: z.string().trim().email("Enter a valid email address"),
-});
+import { resetPasswordSchema } from "../lib/authValidation";
 
 const ForgotPasswordPage = () => {
   const { resetPassword, loading, error } = useAuth();
@@ -18,7 +14,7 @@ const ForgotPasswordPage = () => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    const parsed = resetSchema.safeParse({ email });
+    const parsed = resetPasswordSchema.safeParse({ email });
 
     if (!parsed.success) {
       setFieldError(parsed.error.issues[0]?.message ?? "Please enter a valid email");

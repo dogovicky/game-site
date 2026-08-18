@@ -1,18 +1,11 @@
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { Link } from "react-router-dom";
 import { Input } from "../ui/Input";
 import { Button } from "../ui/Button";
 import { useAuth } from "../../hooks/useAuth";
 import type { AuthCredentials } from "../../types/auth";
 import { motion } from "framer-motion";
-
-const schema = z.object({
-  email: z.string().email({ message: "Invalid email address" }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters" }),
-});
-
-type FormData = z.infer<typeof schema>;
+import { loginSchema, type LoginFormValues } from "../../lib/authValidation";
 
 export const LoginCard = () => {
   const { login, error, loading } = useAuth();
@@ -21,13 +14,13 @@ export const LoginCard = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<LoginFormValues>({
     defaultValues: { email: "", password: "" },
     mode: "onBlur",
   });
 
-  const onSubmit = async (data: FormData) => {
-    const parsed = schema.safeParse(data);
+  const onSubmit = async (data: LoginFormValues) => {
+    const parsed = loginSchema.safeParse(data);
     if (!parsed.success) {
       return;
     }

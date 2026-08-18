@@ -1,25 +1,11 @@
 import { motion } from "framer-motion";
 import { ArrowRight, CheckCircle2, Gamepad2, ShieldCheck } from "lucide-react";
 import { Link } from "react-router-dom";
-import { z } from "zod";
 import { useAuth } from "../../hooks/useAuth";
 import { useAuthForm } from "../../hooks/useAuthForm";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
-
-const signupSchema = z
-  .object({
-    name: z.string().trim().min(2, "Name must be at least 2 characters"),
-    email: z.string().trim().email("Enter a valid email address"),
-    password: z.string().min(8, "Password must be at least 8 characters"),
-    confirmPassword: z.string().min(8, "Please confirm your password"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    path: ["confirmPassword"],
-    message: "Passwords do not match",
-  });
-
-type SignupFormValues = z.infer<typeof signupSchema>;
+import { signupSchema, type SignupFormValues } from "../../lib/authValidation";
 
 const defaultValues: SignupFormValues = {
   name: "",
