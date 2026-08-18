@@ -1,50 +1,64 @@
+def qualityHelper
+def dockerHelper
+
 pipeline {
-	agent any
+    agent any
 
-	options {
-		disableConcurrentBuilds()
-		timestamps()
-		timeout(time: 20, unit: 'MINUTES')
-	}
+    options {
+        disableConcurrentBuilds()
+        timestamps()
+        timeout(time: 20, unit: 'MINUTES')
+    }
 
-	environment {
-		COMPOSE_PROJECT_NAME = 'game-site'
-	}
+    environment {
+        COMPOSE_PROJECT_NAME = 'game-site'
+    }
 
-	stages {
-		stage('Install dependencies') {
-			steps {
-				sh 'npm ci'
-			}
-		}
+    stages {
+        stage('Load pipeline helpers') {
+            steps {
+                script {
+                    qualityHelper = load 'ci/jenkins/quality.groovy'
+                    dockerHelper = load 'ci/jenkins/docker.groovy'
+                }
+            }
+        }
 
-		stage('Quality gates') {
-			steps {
-				sh 'npm run check'
-			}
-		}
+        stage('Install dependencies') {
+            steps {
+                sh 'npm ci'
+            }
+        }
 
-		stage('Build production image') {
-			steps {
-				sh 'npm run docker:build'
-			}
-		}
+        stage('Quality gates') {
+            steps {
+                qualityHelper.run()
+            }
+        }
 
-		stage('Deploy production') {
-			when {
-				branch 'main'
-			}
-			steps {
-				sh 'npm run docker:deploy'
-				sh 'docker compose ps'
-			}
-		}
-	}
+        stage('Build production image') {
+            steps {
+                dockerHelper.build()
+            }
+        }
 
-	post {
-		always {
-			sh 'docker compose logs --no-color --tail=100 app || true'
-			sh 'rm -rf node_modules'
-		}
-	}
+        stage('Deploy production') {
+            when {
+                branch 'main'
+            }
+            steps {
+                dockerHelper.deploy()
+                sh 'docker compose ps'
+            }
+        }
+    }
+
+    post {
+        always {
+            script {
+                dockerHelper.logs()
+            }
+            sh 'rm -rf node_modules'
+        }
+    }
 }
