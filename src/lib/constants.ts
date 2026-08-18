@@ -1,2 +1,6 @@
-export const API_KEY = '8cc58f4928e74c558e000fcc11f2a600'
-export const API_URL = `https://api.rawg.io/api/games?key=${API_KEY}`;
+const apiKey = import.meta.env.VITE_RAWG_API_KEY;
+const apiBaseUrl = import.meta.env.VITE_RAWG_API_BASE_URL ?? 'https://api.rawg.io/api/games';
+
+export const API_URL = apiKey
+	? `${apiBaseUrl}?key=${encodeURIComponent(apiKey)}`
+	: apiBaseUrl;

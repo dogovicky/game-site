@@ -222,9 +222,9 @@ Successful login and signup responses are expected to contain a `user` object an
 
 ### Configuration and security
 
-API configuration should be supplied through environment variables such as `VITE_API_KEY` and `VITE_API_BASE_URL`. Client-exposed Vite variables are not secrets because they are included in the browser bundle. A production deployment should proxy or protect third-party API access through a backend where credentials must remain private.
+API configuration is supplied through `VITE_RAWG_API_KEY` and `VITE_RAWG_API_BASE_URL` in a local environment file. Client-exposed Vite variables are not secrets because they are included in the browser bundle. A production deployment should proxy or protect third-party API access through a backend where credentials must remain private.
 
-The current constants module contains the RAWG API configuration and should be migrated to environment-backed configuration before production use. Credentials must never be added to design documents, source control, or build logs.
+The repository contains `.env.example` as a safe configuration template. Real `.env` and `.env.*` files are ignored by Git. Credentials must never be added to design documents, source control, generated artifacts, or build logs.
 
 ## 10. Testing Strategy
 
@@ -303,7 +303,7 @@ The Jenkins agent requires Node.js/npm, Docker, Docker Compose, and permission t
 
 Prioritized follow-up work:
 
-1. Move API configuration to environment variables and remove exposed credentials.
+1. Proxy RAWG API access through a backend so the API key is not shipped to browsers.
 2. Integrate a real backend authentication service with secure token handling.
 3. Add game details, favorites, reviews, pagination, and/or infinite scrolling.
 4. Add container health checks and a deployment smoke test.

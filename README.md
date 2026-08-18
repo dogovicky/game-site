@@ -6,24 +6,24 @@ A modern web app that allows users to explore, search, and discover video games.
 
 ## 🚀 Features
 
-* ✅ Browse popular, trending, or newly released games
-* ✅ Search games by name, platform, or genre
-* ✅ Filter and sort results (e.g., ratings, release date)
-* ✅ View detailed game pages with screenshots, descriptions, platforms, etc.
-* ✅ Responsive and mobile-friendly design
-* ✅ Built using reusable components and clean architecture
+- ✅ Browse popular, trending, or newly released games
+- ✅ Search games by name, platform, or genre
+- ✅ Filter and sort results (e.g., ratings, release date)
+- ✅ View detailed game pages with screenshots, descriptions, platforms, etc.
+- ✅ Responsive and mobile-friendly design
+- ✅ Built using reusable components and clean architecture
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Technology        | Description                                                      |
-| ----------------- | ---------------------------------------------------------------- |
-| **React.js**      | Component-based UI library for building the frontend             |
-| **Tailwind CSS**  | Utility-first CSS framework for styling                          |
-| **React Router**  | For navigation between pages                                     |
-| **Fetch**         | For API calls (RAWG API)                 |
-| **Vite**          | Used for project build and development |
+| Technology       | Description                                          |
+| ---------------- | ---------------------------------------------------- |
+| **React.js**     | Component-based UI library for building the frontend |
+| **Tailwind CSS** | Utility-first CSS framework for styling              |
+| **React Router** | For navigation between pages                         |
+| **Fetch**        | For API calls (RAWG API)                             |
+| **Vite**         | Used for project build and development               |
 
 ---
 
@@ -62,12 +62,20 @@ yarn install
 
 ### 3. Add Environment Variables
 
-Create a `.env` file in the root folder and add your API key(s):
+Copy `.env.example` to `.env` in the root folder and provide your RAWG configuration:
 
 ```
-VITE_API_KEY=your_api_key_here
-VITE_API_BASE_URL=https://api.example.com
+cp .env.example .env
 ```
+
+Then set the values in `.env`:
+
+```
+VITE_RAWG_API_KEY=your_rawg_api_key_here
+VITE_RAWG_API_BASE_URL=https://api.rawg.io/api/games
+```
+
+The `.env` file is ignored by Git. `VITE_*` values are included in the browser bundle, so they must not be treated as private secrets.
 
 ### 4. Run the development server
 
@@ -89,10 +97,10 @@ npm run build
 
 You can deploy the production build using:
 
-* **Vercel**
-* **Netlify**
-* **GitHub Pages**
-* **Firebase Hosting**
+- **Vercel**
+- **Netlify**
+- **GitHub Pages**
+- **Firebase Hosting**
 
 Example (Vercel):
 
@@ -107,10 +115,10 @@ vercel
 
 ## ✅ To-Do / Future Improvements
 
-* [ ] User accounts and authentication
-* [ ] Favorite / wishlist feature
-* [ ] Reviews and ratings
-* [ ] Infinite scrolling or pagination
+- [ ] User accounts and authentication
+- [ ] Favorite / wishlist feature
+- [ ] Reviews and ratings
+- [ ] Infinite scrolling or pagination
 
 ---
 
