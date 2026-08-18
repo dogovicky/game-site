@@ -1,6 +1,3 @@
-// src/components/skeletons/GameCardSkeleton.jsx (or similar path)
-
-import React from 'react';
 import { Card, CardHeader, CardContent } from "../ui/Card";
 import { Skeleton } from "../ui/Skeleton"; // Assuming this is the correct path
 

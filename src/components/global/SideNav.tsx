@@ -1,13 +1,15 @@
-import { useState } from 'react';
+import { useState, type ComponentType } from 'react';
 import { 
-    CalendarCheck, Award, Gamepad2, Monitor, Trophy, Rocket, Clock, Star, Users, ArrowBigUp, Puzzle, Zap, Smartphone
+    CalendarCheck, Award, Gamepad2, Trophy, Rocket, Clock, Star, Users, ArrowBigUp, Puzzle, Zap
 } from 'lucide-react';
-import { FaWindows, FaPlaystation, FaXbox, FaApple, FaLinux, FaAndroid } from "react-icons/fa";
+import { FaWindows, FaPlaystation, FaXbox, FaLinux, FaAndroid } from "react-icons/fa";
 import { SiNintendoswitch } from "react-icons/si";
 import { MdPhoneIphone } from "react-icons/md";
 
 
-const iconMap = {
+type IconLike = ComponentType<{ size?: number | string; className?: string }>;
+
+const iconMap: Record<string, IconLike> = {
     "Last 30 Days": Rocket,
     "This week": CalendarCheck,
     "Next Week": Clock,
@@ -27,7 +29,7 @@ const iconMap = {
     "Sports": Trophy,
     "Puzzle": Puzzle,
     "Adventure": Rocket
-} as const;
+};
 
 type SideNavProps = {
     setGenre: (option: { label: string; value: string } | null) => void;

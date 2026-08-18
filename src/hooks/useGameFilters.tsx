@@ -54,11 +54,6 @@ export function useGameFilters() {
 }
 
 function getDateHeading(dateFilter: string): string {
-    const now = new Date();
-    const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-    const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-    const nextWeek = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
-
     if (dateFilter.includes('30days')) return 'Last 30 Days';
     if (dateFilter.includes('week')) return 'This Week';
     if (dateFilter.includes('nextweek')) return 'Next Week';
