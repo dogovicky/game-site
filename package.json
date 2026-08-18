@@ -6,11 +6,19 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "clean": "node scripts/clean.mjs",
     "lint": "eslint .",
     "test:lint": "eslint .",
     "typecheck": "tsc -b --pretty false",
     "test": "vitest run",
+    "test:ci": "vitest run --reporter=verbose",
     "test:watch": "vitest",
+    "check": "node scripts/verify.mjs",
+    "docker:build": "docker compose build app",
+    "docker:up": "docker compose up -d --remove-orphans app",
+    "docker:deploy": "docker compose up -d --no-build --remove-orphans app",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs --no-color --tail=100 app",
     "preview": "vite preview"
   },
   "dependencies": {

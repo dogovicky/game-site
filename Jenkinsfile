@@ -19,36 +19,14 @@ pipeline {
 		}
 
 		stage('Quality gates') {
-			parallel {
-				stage('Lint') {
-					steps {
-						sh 'npm run test:lint'
-					}
-				}
-
-				stage('Typecheck') {
-					steps {
-						sh 'npm run typecheck'
-					}
-				}
-
-				stage('Unit tests') {
-					steps {
-						sh 'npm test -- --run'
-					}
-				}
-			}
-		}
-
-		stage('Build application') {
 			steps {
-				sh 'npm run build'
+				sh 'npm run check'
 			}
 		}
 
 		stage('Build production image') {
 			steps {
-				sh 'docker compose build app'
+				sh 'npm run docker:build'
 			}
 		}
 
@@ -57,7 +35,7 @@ pipeline {
 				branch 'main'
 			}
 			steps {
-				sh 'docker compose up -d --no-build --remove-orphans app'
+				sh 'npm run docker:deploy'
 				sh 'docker compose ps'
 			}
 		}
