@@ -4,7 +4,6 @@ import { useAuthContext } from "../context/AuthContext";
 export function useAuth() {
   const ctx = useAuthContext();
 
-  // expose a small API surface and memoize derived values
   return useMemo(
     () => ({
       user: ctx.state.user,
@@ -12,8 +11,9 @@ export function useAuth() {
       loading: ctx.loading,
       error: ctx.error,
       login: ctx.login,
+      signup: ctx.signup,
       logout: ctx.logout,
     }),
-    [ctx.state, ctx.loading, ctx.error]
+    [ctx.state, ctx.loading, ctx.error, ctx.login, ctx.signup, ctx.logout]
   );
 }

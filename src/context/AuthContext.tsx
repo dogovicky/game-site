@@ -1,13 +1,13 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-import type { ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import axios from "axios";
-import type { AuthCredentials, User, AuthState } from "../types/auth";
+import type { AuthCredentials, User, AuthState, SignupCredentials, AuthResponse } from "../types/auth";
 
 interface AuthContextType {
   state: AuthState;
   loading: boolean;
   error: string | null;
   login: (creds: AuthCredentials) => Promise<User>;
+  signup: (creds: SignupCredentials) => Promise<User>;
   logout: () => void;
 }
 
@@ -40,39 +40,86 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [state]);
 
+  const hydrateSession = (response: AuthResponse) => {
+    const newState: AuthState = {
+      user: response.user,
+      token: response.token,
+    };
+
+    setState(newState);
+    return response.user;
+  };
+
   const login = async (creds: AuthCredentials) => {
     setLoading(true);
     setError(null);
     try {
-      // Example: attempt a real request first. If the endpoint isn't available, fall back to a mocked response.
-      // Keep this small and safe so it works in developer environments.
-      let user: User;
-      let token: string;
+      let response: AuthResponse;
 
       try {
         const res = await axios.post("/api/auth/login", creds, { timeout: 3000 });
-        user = res.data.user;
-        token = res.data.token;
+        response = res.data as AuthResponse;
       } catch (e) {
-        // Fallback mock: accept any email with password length >= 6
         if (creds.password.length < 6) {
           throw new Error("Invalid credentials");
         }
-        user = {
-          id: (Math.random() * 100000).toFixed(0),
-          name: creds.email.split("@")[0],
-          email: creds.email,
-          avatar: null,
+
+        response = {
+          user: {
+            id: (Math.random() * 100000).toFixed(0),
+            name: creds.email.split("@")[0],
+            email: creds.email,
+            avatar: null,
+          },
+          token: "dev-token-" + btoa(creds.email),
         };
-        token = "dev-token-" + btoa(creds.email);
       }
 
-      const newState: AuthState = { user, token };
-      setState(newState);
+      const user = hydrateSession(response);
       setLoading(false);
       return user;
     } catch (err: any) {
       setError(err?.message || "Login failed");
+      setLoading(false);
+      throw err;
+    }
+  };
+
+  const signup = async (creds: SignupCredentials) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      if (creds.password.length < 8) {
+        throw new Error("Password must be at least 8 characters");
+      }
+
+      if (creds.password !== creds.confirmPassword) {
+        throw new Error("Passwords do not match");
+      }
+
+      let response: AuthResponse;
+
+      try {
+        const res = await axios.post("/api/auth/signup", creds, { timeout: 3000 });
+        response = res.data as AuthResponse;
+      } catch (e) {
+        response = {
+          user: {
+            id: (Math.random() * 100000).toFixed(0),
+            name: creds.name,
+            email: creds.email,
+            avatar: null,
+          },
+          token: "dev-signup-token-" + btoa(creds.email),
+        };
+      }
+
+      const user = hydrateSession(response);
+      setLoading(false);
+      return user;
+    } catch (err: any) {
+      setError(err?.message || "Signup failed");
       setLoading(false);
       throw err;
     }
@@ -84,7 +131,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ state, loading, error, login, logout }}>
+    <AuthContext.Provider value={{ state, loading, error, login, signup, logout }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,4 +1,3 @@
-import React from "react";
 import { LoginCard } from "../components/auth/LoginCard";
 import { AuthProvider } from "../context/AuthContext";
 import { useAuthContext } from "../context/AuthContext";
