@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import axios from "axios";
 import type { AuthCredentials, User, AuthState, SignupCredentials, AuthResponse } from "../types/auth";
@@ -27,7 +28,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const parsed = JSON.parse(raw) as AuthState;
         setState(parsed);
       }
-    } catch (e) {
+    } catch {
       // ignore
     }
   }, []);
@@ -36,7 +37,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // persist
     try {
       localStorage.setItem("auth", JSON.stringify(state));
-    } catch (e) {
+    } catch {
       // ignore
     }
   }, [state]);
@@ -60,7 +61,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       try {
         const res = await axios.post("/api/auth/login", creds, { timeout: 3000 });
         response = res.data as AuthResponse;
-      } catch (e) {
+      } catch {
         if (creds.password.length < 6) {
           throw new Error("Invalid credentials");
         }
@@ -79,8 +80,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const user = hydrateSession(response);
       setLoading(false);
       return user;
-    } catch (err: any) {
-      setError(err?.message || "Login failed");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Login failed";
+      setError(message);
       setLoading(false);
       throw err;
     }
@@ -104,7 +106,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       try {
         const res = await axios.post("/api/auth/signup", creds, { timeout: 3000 });
         response = res.data as AuthResponse;
-      } catch (e) {
+      } catch {
         response = {
           user: {
             id: (Math.random() * 100000).toFixed(0),
@@ -119,8 +121,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const user = hydrateSession(response);
       setLoading(false);
       return user;
-    } catch (err: any) {
-      setError(err?.message || "Signup failed");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Signup failed";
+      setError(message);
       setLoading(false);
       throw err;
     }
@@ -139,14 +142,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       try {
         await axios.post("/api/auth/forgot-password", { email: normalizedEmail }, { timeout: 3000 });
-      } catch (e) {
+      } catch {
         // Developer-safe mock fallback: accept any valid email and simulate a successful reset.
       }
 
       setLoading(false);
       return;
-    } catch (err: any) {
-      setError(err?.message || "Unable to reset password right now");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Unable to reset password right now";
+      setError(message);
       setLoading(false);
       throw err;
     }
