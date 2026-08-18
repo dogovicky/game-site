@@ -40,7 +40,7 @@ export interface Game {
     background_image: string;
     rating?: number;
     rating_top?: number;
-    ratings?: any[];
+    ratings?: Array<Record<string, unknown>>;
     ratings_count?: number;
     metacritic?: number;
     playtime?: number;

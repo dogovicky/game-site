@@ -30,7 +30,7 @@ const ForgotPasswordPage = () => {
     try {
       await resetPassword(parsed.data.email);
       setIsSubmitted(true);
-    } catch (err) {
+    } catch {
       setIsSubmitted(false);
     }
   };
